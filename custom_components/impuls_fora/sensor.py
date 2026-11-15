@@ -21,7 +21,9 @@ STATES = {
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
     async_add_entities([ForaSensor(coordinator, spec) for spec in REGISTERS] +
-                       [ForaCalculatedSensor(coordinator, key, *spec) for key, spec in CALCULATED.items()])
+                       [ForaCalculatedSensor(coordinator, key, *spec) for key, spec in CALCULATED.items()
+                        if not key.startswith("generator_") or (
+                            entry.options.get("generator_enabled", False) and entry.options.get("generator_contactor"))])
 
 class ForaSensor(ForaEntity, SensorEntity):
     def __init__(self, coordinator, spec):
@@ -54,6 +56,8 @@ CALCULATED = {
     "discharge_power": ("Мощность разряда АКБ", "W", "power"),
     "charge_energy": ("Энергия заряда АКБ", "kWh", "energy"),
     "discharge_energy": ("Энергия разряда АКБ", "kWh", "energy"),
+    "generator_power": ("Мощность генератора (расчётная)", "W", "power"),
+    "generator_energy": ("Выработка генератора (расчётная)", "kWh", "energy"),
 }
 
 class ForaCalculatedSensor(ForaEntity, SensorEntity):
@@ -66,7 +70,12 @@ class ForaCalculatedSensor(ForaEntity, SensorEntity):
         self._attr_state_class = "total" if device_class == "energy" else "measurement"
         self._attr_suggested_display_precision = 4 if device_class == "energy" else 1
         self._attr_extra_state_attributes = {"calculated": True}
-        if key != "output_power":
+        if key.startswith("generator_"):
+            self._attr_extra_state_attributes.update(
+                measurement_side="ups_ac_input", method="sum_phase_voltage_current_pf",
+                source_entity=coordinator.entry.options.get("generator_contactor"),
+                include_bypass=coordinator.entry.options.get("generator_include_bypass", False))
+        elif key != "output_power":
             self._attr_extra_state_attributes.update(
                 measurement_side="battery_dc",
                 direction_mode=coordinator.entry.options.get("battery_mode", "disabled"),

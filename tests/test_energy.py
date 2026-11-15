@@ -19,6 +19,41 @@ def registers(state=451, positive=100, negative=100):
             88: 39, 89: 4, 90: 43}
 
 class Calculations(unittest.TestCase):
+    def test_generator_power_is_gated_by_contactor(self):
+        r = registers()
+        for a in (57,58,59):
+            r[a] = 2300
+        for a in (60,61,62):
+            r[a] = 100
+        for a in (66,67,68):
+            r[a] = 90
+        self.assertEqual(energy.generator_power(r,'generator'),6210)
+        self.assertEqual(energy.generator_power(r,'mains'),0)
+        self.assertEqual(energy.generator_power(r,'off'),0)
+        for state in ('unavailable','unknown','undefined',None,'3'):
+            self.assertIsNone(energy.generator_power(r,state))
+
+    def test_generator_bypass_and_invalid_pf(self):
+        r = registers()
+        for base, value in ((57,2300),(60,100),(66,100),(44,2300),(47,50),(53,100)):
+            for p in range(3):
+                r[base+p] = value
+        self.assertEqual(energy.generator_power(r,'generator'),6900)
+        self.assertEqual(energy.generator_power(r,'generator',True),10350)
+        r[66] = 101
+        self.assertIsNone(energy.generator_power(r,'generator'))
+        r[66] = 65535
+        self.assertIsNone(energy.generator_power(r,'generator'))
+
+    def test_generation_counter_restore_and_gap(self):
+        c = energy.EnergyCounter(25, {'generator_energy':4}, keys=('generator_energy',))
+        c.update(0,(3600,))
+        c.update(10,(0,))
+        self.assertAlmostEqual(c.totals['generator_energy'],4.01)
+        c.update(20,None)
+        c.update(30,(7200,))
+        self.assertAlmostEqual(c.totals['generator_energy'],4.01)
+
     def test_requires_explicit_enable(self):
         self.assertIsNone(energy.battery_power(registers()))
 
@@ -158,6 +193,53 @@ class CoordinatorTests(unittest.IsolatedAsyncioTestCase):
         result = await self.snapshot()
         self.assertEqual(result['calculated'],{'output_power':8600})
         self.assertEqual(self.c.energy_store.saves,[])
+
+    async def test_generator_disabled_ignores_previously_selected_source(self):
+        self.c.entry.options = {'generator_enabled':False,'generator_contactor':'sensor.ats'}
+        def forbidden_read(entity):
+            raise AssertionError('Disabled generator must not read external entities')
+        self.c._hass = types.SimpleNamespace(states=types.SimpleNamespace(get=forbidden_read))
+        result = await self.snapshot()
+        self.assertEqual(result['calculated'],{'output_power':8600})
+        self.assertEqual(self.c.generation_store.saves,[])
+
+    async def test_generator_coordinator_persists_and_loses_availability(self):
+        r = registers()
+        for base, value in ((57,2300),(60,100),(66,100)):
+            for phase in range(3):
+                r[base+phase] = value
+        source = types.SimpleNamespace(state='generator')
+        self.c.entry.options = {'generator_enabled':True,'generator_contactor':'sensor.myavr_contactor_position'}
+        self.c._hass = types.SimpleNamespace(states=types.SimpleNamespace(get=lambda entity: source))
+        async def read():
+            return {'registers':r,'bits':{16:False}}
+        self.c.reader.snapshot = read
+        with patch.object(self.mod,'monotonic',side_effect=[0,10,20,30]):
+            first = await self.c._async_update_data()
+            second = await self.c._async_update_data()
+            self.assertEqual(first['calculated']['generator_power'],6900)
+            self.assertAlmostEqual(second['calculated']['generator_energy'],6900*10/3600000)
+            self.assertEqual(self.c.generation_store.saves[-1],self.c.generation.totals)
+            source.state = 'unavailable'
+            lost = await self.c._async_update_data()
+            self.assertNotIn('generator_energy',lost['calculated'])
+            source.state = 'mains'
+            restored = await self.c._async_update_data()
+            self.assertEqual(restored['calculated']['generator_power'],0)
+            self.assertEqual(restored['calculated']['generator_energy'],second['calculated']['generator_energy'])
+
+    async def test_bypass_without_explicit_branch_support_is_unavailable(self):
+        self.c.entry.options = {'generator_enabled':True,'generator_contactor':'sensor.ats'}
+        self.c._hass = types.SimpleNamespace(states=types.SimpleNamespace(
+            get=lambda entity: types.SimpleNamespace(state='generator')))
+        async def read():
+            return {'registers':registers(),'bits':{16:True}}
+        self.c.reader.snapshot = read
+        # No input calculation is needed for mains, but generator needs registers.
+        original = self.mod.generator_power
+        with patch.object(self.mod,'generator_power',return_value=1000):
+            result = await self.c._async_update_data()
+        self.assertNotIn('generator_power',result['calculated'])
 
     async def test_storage_failure_does_not_publish(self):
         async def fail_save(data):

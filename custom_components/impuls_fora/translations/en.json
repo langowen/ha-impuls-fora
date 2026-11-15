@@ -24,13 +24,19 @@
   "options": {
     "step": {
       "init": {
-        "title": "Battery power and energy calculation",
-        "description": "Enable only after verifying the battery branches. Two independent branches use the sum of each branch V×I. Battery calculations are unavailable while disabled. See README.",
+        "title": "Battery and generator energy",
+        "description": "Enable only after verifying the battery branches. Two independent branches use the sum of each branch V×I. Battery calculations are unavailable while disabled. See README. Generator: select the MyAVR contactor sensor only if all loads pass through this UPS. Verify the wiring before including a separate bypass input.",
         "data": {
           "battery_mode": "Direction mode",
-          "battery_channels": "Battery channels"
+          "battery_channels": "Battery channels",
+          "generator_contactor": "ATS contactor position sensor",
+          "generator_include_bypass": "Include separate bypass input",
+          "generator_enabled": "Enable generator accounting (optional)"
         }
       }
+    },
+    "error": {
+      "generator_source_required": "Select the ATS contactor position sensor or disable generator accounting."
     }
   }
 }

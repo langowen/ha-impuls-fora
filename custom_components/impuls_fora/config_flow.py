@@ -5,6 +5,7 @@ from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers import selector
 from .const import DOMAIN, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_UNIT, DEFAULT_INTERVAL
 from .protocol import Reader, ReadError
 
@@ -55,10 +56,14 @@ class ForaOptionsFlow(config_entries.OptionsFlow):
     """Configure direction and branch topology without replacing the device."""
 
     async def async_step_init(self, user_input=None):
+        errors = {}
         if user_input is not None:
-            return self.async_create_entry(title="", data=user_input)
-        options = self.config_entry.options
-        return self.async_show_form(step_id="init", data_schema=vol.Schema({
+            if user_input.get("generator_enabled") and not user_input.get("generator_contactor"):
+                errors["base"] = "generator_source_required"
+            else:
+                return self.async_create_entry(title="", data=user_input)
+        options = user_input if user_input is not None else self.config_entry.options
+        return self.async_show_form(step_id="init", errors=errors, data_schema=vol.Schema({
             vol.Required("battery_mode", default=options.get("battery_mode", "disabled")):
                 vol.In({"disabled": "Отключено — до проверки каналов АКБ",
                         "status": "Направление по состоянию АКБ (326/451/331)",
@@ -68,4 +73,8 @@ class ForaOptionsFlow(config_entries.OptionsFlow):
                 vol.In({"both": "Две независимые ветви АКБ: + и −",
                         "positive": "Только канал АКБ +",
                         "negative": "Только канал АКБ −"}),
+            vol.Required("generator_enabled", default=options.get("generator_enabled", False)): bool,
+            vol.Optional("generator_contactor", description={"suggested_value": options.get("generator_contactor", "")}):
+                selector.EntitySelector(selector.EntitySelectorConfig(domain="sensor")),
+            vol.Required("generator_include_bypass", default=options.get("generator_include_bypass", False)): bool,
         }))
