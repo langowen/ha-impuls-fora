@@ -20,5 +20,17 @@
     "abort": {
       "already_configured": "This UPS is already configured."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Battery power and energy calculation",
+        "description": "Enable only after verifying the battery branches. Two independent branches use the sum of each branch V×I. Battery calculations are unavailable while disabled. See README.",
+        "data": {
+          "battery_mode": "Direction mode",
+          "battery_channels": "Battery channels"
+        }
+      }
+    }
   }
 }

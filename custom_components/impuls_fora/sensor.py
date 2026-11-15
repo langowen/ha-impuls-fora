@@ -20,7 +20,8 @@ STATES = {
 
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
-    async_add_entities([ForaSensor(coordinator, spec) for spec in REGISTERS])
+    async_add_entities([ForaSensor(coordinator, spec) for spec in REGISTERS] +
+                       [ForaCalculatedSensor(coordinator, key, *spec) for key, spec in CALCULATED.items()])
 
 class ForaSensor(ForaEntity, SensorEntity):
     def __init__(self, coordinator, spec):
@@ -44,3 +45,37 @@ class ForaSensor(ForaEntity, SensorEntity):
         if self.spec["address"] in STATES:
             return STATES[self.spec["address"]].get(raw, f"Неизвестный код {raw}")
         return decode(raw, self.spec["dtype"], self.spec["scale"])
+
+
+CALCULATED = {
+    "output_power": ("Суммарная выходная мощность", "W", "power"),
+    "battery_power": ("Мощность АКБ", "W", "power"),
+    "charge_power": ("Мощность заряда АКБ", "W", "power"),
+    "discharge_power": ("Мощность разряда АКБ", "W", "power"),
+    "charge_energy": ("Энергия заряда АКБ", "kWh", "energy"),
+    "discharge_energy": ("Энергия разряда АКБ", "kWh", "energy"),
+}
+
+class ForaCalculatedSensor(ForaEntity, SensorEntity):
+    def __init__(self, coordinator, key, name, unit, device_class):
+        super().__init__(coordinator, key, name)
+        self.key = key
+        self.entity_id = f"sensor.fora3330_{key}"
+        self._attr_native_unit_of_measurement = unit
+        self._attr_device_class = device_class
+        self._attr_state_class = "total" if device_class == "energy" else "measurement"
+        self._attr_suggested_display_precision = 4 if device_class == "energy" else 1
+        self._attr_extra_state_attributes = {"calculated": True}
+        if key != "output_power":
+            self._attr_extra_state_attributes.update(
+                measurement_side="battery_dc",
+                direction_mode=coordinator.entry.options.get("battery_mode", "disabled"),
+                channels=coordinator.entry.options.get("battery_channels", "both"))
+
+    @property
+    def available(self):
+        return super().available and self.key in self.coordinator.data.get("calculated", {})
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("calculated", {}).get(self.key)

@@ -83,3 +83,17 @@ cards:
         name: Перегрузка
       - entity: binary_sensor.fora3330_d0
         name: Ошибка связи, сообщаемая ИБП
+  - type: entities
+    title: Мощность и энергия
+    show_header_toggle: false
+    entities:
+      - entity: sensor.fora3330_output_power
+        name: Суммарная выходная мощность
+      - entity: sensor.fora3330_charge_power
+        name: Мощность заряда АКБ
+      - entity: sensor.fora3330_discharge_power
+        name: Мощность разряда АКБ
+      - entity: sensor.fora3330_charge_energy
+        name: Энергия заряда АКБ
+      - entity: sensor.fora3330_discharge_energy
+        name: Энергия разряда АКБ

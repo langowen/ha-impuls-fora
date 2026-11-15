@@ -4,6 +4,7 @@ import voluptuous as vol
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
 from homeassistant import config_entries
+from homeassistant.core import callback
 from .const import DOMAIN, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_UNIT, DEFAULT_INTERVAL
 from .protocol import Reader, ReadError
 
@@ -11,6 +12,11 @@ _LOGGER = logging.getLogger(__name__)
 
 class ForaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry):
+        return ForaOptionsFlow()
 
     async def async_step_user(self, user_input=None):
         errors = {}
@@ -43,3 +49,23 @@ class ForaConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.All(vol.Coerce(int), vol.Range(min=5, max=300)),
         })
         return self.async_show_form(step_id="user", data_schema=schema, errors=errors)
+
+
+class ForaOptionsFlow(config_entries.OptionsFlow):
+    """Configure direction and branch topology without replacing the device."""
+
+    async def async_step_init(self, user_input=None):
+        if user_input is not None:
+            return self.async_create_entry(title="", data=user_input)
+        options = self.config_entry.options
+        return self.async_show_form(step_id="init", data_schema=vol.Schema({
+            vol.Required("battery_mode", default=options.get("battery_mode", "disabled")):
+                vol.In({"disabled": "Отключено — до проверки каналов АКБ",
+                        "status": "Направление по состоянию АКБ (326/451/331)",
+                        "positive_charge": "Положительный ток — заряд",
+                        "positive_discharge": "Положительный ток — разряд"}),
+            vol.Required("battery_channels", default=options.get("battery_channels", "both")):
+                vol.In({"both": "Две независимые ветви АКБ: + и −",
+                        "positive": "Только канал АКБ +",
+                        "negative": "Только канал АКБ −"}),
+        }))
