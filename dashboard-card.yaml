@@ -1,0 +1,85 @@
+type: vertical-stack
+cards:
+  - type: markdown
+    content: |
+      ## Импульс ФОРА 3330
+      **Режим:** {{ states('sensor.fora3330_r0') }}
+      **АКБ:** {{ states('sensor.fora3330_r2') }}
+  - type: conditional
+    conditions:
+      - entity: sensor.fora3330_r0
+        state: unavailable
+    card:
+      type: markdown
+      content: "⚠️ Нет связи с ИБП. Показания недоступны."
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.fora3330_d15
+        state: 'on'
+    card:
+      type: markdown
+      content: "🔋 **ИБП работает от аккумуляторов**"
+  - type: conditional
+    conditions:
+      - entity: binary_sensor.fora3330_d1
+        state: 'on'
+    card:
+      type: markdown
+      content: "⚠️ **ИБП сообщает об аварии. Проверьте состояния ниже.**"
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: gauge
+        entity: sensor.fora3330_r101
+        name: Заряд АКБ
+        min: 0
+        max: 100
+        severity:
+          red: 0
+          yellow: 25
+          green: 60
+      - type: tile
+        entity: sensor.fora3330_r102
+        name: Автономия, мин
+        icon: mdi:timer-outline
+  - type: markdown
+    content: |
+      ### Три фазы
+      | Параметр | Фаза А | Фаза В | Фаза С |
+      |:--|--:|--:|--:|
+      | Вход, В | {{ states('sensor.fora3330_r57') }} | {{ states('sensor.fora3330_r58') }} | {{ states('sensor.fora3330_r59') }} |
+      | Выход, В | {{ states('sensor.fora3330_r71') }} | {{ states('sensor.fora3330_r72') }} | {{ states('sensor.fora3330_r73') }} |
+      | Ток выхода, А | {{ states('sensor.fora3330_r74') }} | {{ states('sensor.fora3330_r75') }} | {{ states('sensor.fora3330_r76') }} |
+      | Нагрузка, % | {{ states('sensor.fora3330_r94') }} | {{ states('sensor.fora3330_r95') }} | {{ states('sensor.fora3330_r96') }} |
+      | Мощность, кВт | {{ states('sensor.fora3330_r88') }} | {{ states('sensor.fora3330_r89') }} | {{ states('sensor.fora3330_r90') }} |
+  - type: entities
+    title: Аккумуляторы
+    show_header_toggle: false
+    entities:
+      - entity: sensor.fora3330_r97
+        name: Напряжение АКБ
+      - entity: sensor.fora3330_r98
+        name: Напряжение АКБ −
+      - entity: sensor.fora3330_r99
+        name: Ток АКБ
+      - entity: sensor.fora3330_r100
+        name: Ток АКБ −
+      - entity: sensor.fora3330_r103
+        name: Температура
+  - type: entities
+    title: Состояния и аварии
+    show_header_toggle: false
+    entities:
+      - entity: binary_sensor.fora3330_d1
+        name: Общая авария
+      - entity: binary_sensor.fora3330_d15
+        name: Разряд АКБ
+      - entity: binary_sensor.fora3330_d16
+        name: Нагрузка на байпасе
+      - entity: binary_sensor.fora3330_d9
+        name: Низкое напряжение АКБ
+      - entity: binary_sensor.fora3330_d12
+        name: Перегрузка
+      - entity: binary_sensor.fora3330_d0
+        name: Ошибка связи, сообщаемая ИБП

@@ -1,0 +1,16 @@
+{
+  "domain": "impuls_fora",
+  "name": "Импульс ФОРА",
+  "version": "0.1.1",
+  "config_flow": true,
+  "dependencies": [
+    "modbus"
+  ],
+  "codeowners": [
+    "@langowen"
+  ],
+  "iot_class": "local_polling",
+  "integration_type": "device",
+  "documentation": "https://github.com/langowen/ha-impuls-fora",
+  "issue_tracker": "https://github.com/langowen/ha-impuls-fora/issues"
+}

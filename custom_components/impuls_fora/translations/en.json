@@ -1,0 +1,24 @@
+{
+  "title": "Импульс ФОРА",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect Impuls Fora UPS",
+        "description": "Use the Modbus TCP settings from the UPS web interface.",
+        "data": {
+          "host": "UPS IP address",
+          "port": "Port",
+          "unit_id": "Modbus unit ID",
+          "scan_interval": "Polling interval (seconds)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Cannot read UPS measurements and status. Check host, port and unit ID.",
+      "unknown": "Unexpected error. See the Home Assistant log."
+    },
+    "abort": {
+      "already_configured": "This UPS is already configured."
+    }
+  }
+}

@@ -1,0 +1,530 @@
+[
+  {
+    "address": 0,
+    "name": "Источник питания",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "",
+    "description": "450:Нет нагрузки;330:ИБП работает в нормальном режиме;327:Нагрузка на байпасе;"
+  },
+  {
+    "address": 1,
+    "name": "АКБ подключены",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "",
+    "description": "3:Нет;4:Да;"
+  },
+  {
+    "address": 2,
+    "name": "Состояние АКБ",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "",
+    "description": "538:АКБ в режиме ожидания;451:Поддерживающий заряд;331:Ускоренный заряд;326:АКБ разряжается;"
+  },
+  {
+    "address": 44,
+    "name": "Напряжение байпаса, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 45,
+    "name": "Напряжение байпаса, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 46,
+    "name": "Напряжение байпаса, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 47,
+    "name": "Ток байпаса, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 48,
+    "name": "Ток байпаса, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 49,
+    "name": "Ток байпаса, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 50,
+    "name": "Частота байпаса, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 51,
+    "name": "Частота байпаса, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 52,
+    "name": "Частота байпаса, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 53,
+    "name": "PF байпаса, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 54,
+    "name": "PF байпаса, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 55,
+    "name": "PF байпаса, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 56,
+    "name": "Наработка вентиляторов байпаса",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "ч",
+    "description": ""
+  },
+  {
+    "address": 57,
+    "name": "Входное напряжение, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 58,
+    "name": "Входное напряжение, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 59,
+    "name": "Входное напряжение, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 60,
+    "name": "Входной ток, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 61,
+    "name": "Входной ток, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 62,
+    "name": "Входной ток, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 63,
+    "name": "Входная частота, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 64,
+    "name": "Входная частота, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 65,
+    "name": "Входная частота, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 66,
+    "name": "PF на входе, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 67,
+    "name": "PF на входе, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 68,
+    "name": "PF на входе, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 69,
+    "name": "Номинальное входное напряжение",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 70,
+    "name": "Номинальная входная частота",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 71,
+    "name": "Выходное напряжение, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 72,
+    "name": "Выходное напряжение, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 73,
+    "name": "Выходное напряжение, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 74,
+    "name": "Выходной ток, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 75,
+    "name": "Выходной ток, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 76,
+    "name": "Выходной ток, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 77,
+    "name": "Выходная частота, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 78,
+    "name": "Выходная частота, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 79,
+    "name": "Выходная частота, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 80,
+    "name": "PF на выходе, фаза А",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 81,
+    "name": "PF на выходе, фаза В",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 82,
+    "name": "PF на выходе, фаза С",
+    "dtype": "uint16",
+    "scale": 0.01,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 83,
+    "name": "Номинальное выходное напряжение",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 84,
+    "name": "Номинальная выходная частота",
+    "dtype": "uint16",
+    "scale": 1.0,
+    "unit": "Гц",
+    "description": ""
+  },
+  {
+    "address": 85,
+    "name": "Полная выходная мощность, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВА",
+    "description": ""
+  },
+  {
+    "address": 86,
+    "name": "Полная выходная мощность, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВА",
+    "description": ""
+  },
+  {
+    "address": 87,
+    "name": "Полная выходная мощность, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВА",
+    "description": ""
+  },
+  {
+    "address": 88,
+    "name": "Активная выходная мощность, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВт",
+    "description": ""
+  },
+  {
+    "address": 89,
+    "name": "Активная выходная мощность, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВт",
+    "description": ""
+  },
+  {
+    "address": 90,
+    "name": "Активная выходная мощность, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВт",
+    "description": ""
+  },
+  {
+    "address": 91,
+    "name": "Реактивная выходная мощность, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВАр",
+    "description": ""
+  },
+  {
+    "address": 92,
+    "name": "Реактивная выходная мощность, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВАр",
+    "description": ""
+  },
+  {
+    "address": 93,
+    "name": "Реактивная выходная мощность, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "кВАр",
+    "description": ""
+  },
+  {
+    "address": 94,
+    "name": "Нагрузка на выходе, фаза А",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "%",
+    "description": ""
+  },
+  {
+    "address": 95,
+    "name": "Нагрузка на выходе, фаза В",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "%",
+    "description": ""
+  },
+  {
+    "address": 96,
+    "name": "Нагрузка на выходе, фаза С",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "%",
+    "description": ""
+  },
+  {
+    "address": 97,
+    "name": "Напряжение АКБ",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 98,
+    "name": "Напряжение АКБ -",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "В",
+    "description": ""
+  },
+  {
+    "address": 99,
+    "name": "Ток АКБ",
+    "dtype": "int16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 100,
+    "name": "Ток АКБ -",
+    "dtype": "int16",
+    "scale": 0.1,
+    "unit": "А",
+    "description": ""
+  },
+  {
+    "address": 101,
+    "name": "Заряд АКБ",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "%",
+    "description": ""
+  },
+  {
+    "address": 102,
+    "name": "Оставшееся время автономии",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "мин.",
+    "description": ""
+  },
+  {
+    "address": 103,
+    "name": "Температура АКБ",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "℃",
+    "description": ""
+  },
+  {
+    "address": 104,
+    "name": "Время наработки АКБ",
+    "dtype": "uint16",
+    "scale": 0.1,
+    "unit": "День",
+    "description": ""
+  },
+  {
+    "address": 105,
+    "name": "Кол-во АКБ в линейке",
+    "dtype": "int16",
+    "scale": 1.0,
+    "unit": "",
+    "description": ""
+  },
+  {
+    "address": 106,
+    "name": "Внешняя температура",
+    "dtype": "int16",
+    "scale": 0.1,
+    "unit": "℃",
+    "description": ""
+  }
+]
